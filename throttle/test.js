@@ -5,7 +5,7 @@ var throttle = require('./');
 describe('throttle', function() {
   var clock;
 
-  beforeEach(function () { clock = sinon.useFakeTimers(); });
+  beforeEach(function () { clock = sinon.useFakeTimers(); clock.tick(1); });
   afterEach(function () { clock.restore(); });
 
   it('executes right away', function() {
