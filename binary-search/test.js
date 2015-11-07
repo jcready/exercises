@@ -52,21 +52,23 @@ describe('binarySearch', function() {
     var arrayLength = 10000;
     var proxyArray = generateRandomNumberArray(arrayLength);
     var smartArray = [];
-    for (var i = 0; i < 10000; i++) {
-      (function(i) {
-        Object.defineProperty(smartArray, i, {
-          get: function() {
-            lookups[i] = true;
-            return proxyArray[i];
-          },
-        });
-      })(i);
+    function defineSmartIndex(i) {
+      Object.defineProperty(smartArray, i, {
+        get: function() {
+          lookups[i] = true;
+          return proxyArray[i];
+        },
+      });
     }
-    var indexOfElement = arrayLength - 4;
+    for (var i = 0; i < 10000; i++) {
+      defineSmartIndex(i);
+    }
+    var indexOfElement = arrayLength - 5;
     var lookingFor = proxyArray[indexOfElement];
     var index = binarySearch(smartArray, lookingFor);
+    var totalLookups = Object.keys(lookups).length;
     assert.equal(index, indexOfElement);
-    assert.equal(Object.keys(lookups).length, 13);
+    assert.ok(Math.abs(totalLookups - 13) <= 1);
   });
 
 
